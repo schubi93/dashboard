@@ -34,16 +34,14 @@
       box-shadow: 0 12px 30px rgba(0,0,0,0.6);
     }
 
-    /* Top-left and bottom-left: clip with inset */
     .clip-img {
-      width: calc(100% + 80px); /* account for 40px on left and right */
-      height: calc(100% + 80px); /* account for 40px on top and bottom */
+      width: calc(100% + 80px);
+      height: calc(100% + 80px);
       object-fit: cover;
       object-position: center;
       margin: -40px;
     }
 
-    /* Top-right: no background, just the clock */
     .clock-cell {
       background: transparent;
       box-shadow: none;
@@ -60,31 +58,41 @@
       border-radius: 12px;
     }
 
-    /* Bottom-right: move image up to clip top */
     .bottom-right-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center bottom; /* align to top, so bottom gets clipped if needed */
+      object-position: center bottom;
     }
   </style>
 </head>
 <body>
   <div class="grid">
     <div class="cell">
-      <img class="clip-img" src="https://coburgerhuette.at/coburger/coburger.jpg" alt="Coburger Hütte">
+      <img class="clip-img refreshable" src="https://coburgerhuette.at/coburger/coburger.jpg" alt="Coburger Hütte">
     </div>
     <div class="cell clock-cell">
       <div class="aspect-ratio-box">
-        <iframe src="https://free.timeanddate.com/clock/i9yoyfit/n970/tlde3/fn2/fs48/fcfff/tc121212/pc121212/ftb/tt0/tw1/tb4" title="Uhrzeit"></iframe>
+        <iframe class="refreshable" src="https://free.timeanddate.com/clock/i9yoyfit/n970/tlde3/fn2/fs48/fcfff/tc121212/pc121212/ftb/tt0/tw1/tb4" title="Uhrzeit"></iframe>
       </div>
     </div>
     <div class="cell">
-      <img class="clip-img" src="https://www.augsburg.de/fileadmin/user_upload/header/webcam/webcamerker/B_Rathaus_und_Perlachturm_00.jpg" alt="Augsburg Webcam">
+      <img class="clip-img refreshable" src="https://www.augsburg.de/fileadmin/user_upload/header/webcam/webcamdachspitz/B_Rathausplatz_Dachspitz_00.jpg" alt="Augsburg Webcam">
     </div>
     <div class="cell">
-      <img class="bottom-right-img" src="https://www.dwd.de/DWD/wetter/radar/radfilm_bay_akt.gif" alt="Radar Bayern">
+      <img class="bottom-right-img refreshable" src="https://www.dwd.de/DWD/wetter/radar/radfilm_bay_akt.gif" alt="Radar Bayern">
     </div>
   </div>
+
+  <script>
+    // Refresh only images and iframes every 60 seconds
+    function refreshSources() {
+      document.querySelectorAll('.refreshable').forEach(el => {
+        const src = el.getAttribute('src').split('?')[0]; // strip old cache buster
+        el.setAttribute('src', src + '?t=' + Date.now());
+      });
+    }
+    setInterval(refreshSources, 20000);
+  </script>
 </body>
 </html>
